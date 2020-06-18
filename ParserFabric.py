@@ -11,6 +11,17 @@ class ScrapperFabric(abc.ABC):
         pass
 
 
+class EmptyFabric(ScrapperFabric):
+    """
+    Just empty fabric
+
+    Code in launch_fabrics are clearly with this class
+    """
+
+    def create_parser(self, search_fields: list):
+        raise NotImplementedError('Wrong site name')
+
+
 class TproggerParserFabric(ScrapperFabric):
 
     def create_parser(self, search_fields: list):
@@ -24,12 +35,16 @@ class HabrParserFabric(ScrapperFabric):
 
 
 def launch_fabrics(site: str):
-    fabric = None
     if site == 'tproger':
         fabric = TproggerParserFabric()
     elif site == 'habr':
         fabric = HabrParserFabric()
     else:
-        return
+        fabric = EmptyFabric()
 
     return fabric.create_parser(PROGRAMMING_KEYWORDS)
+
+
+if __name__ == '__main__':
+    parser = launch_fabrics('tproger')
+    parser.manage()

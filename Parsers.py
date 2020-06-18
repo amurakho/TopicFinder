@@ -2,6 +2,10 @@ import requests
 import abc
 import asyncio
 import aiohttp
+from bs4 import BeautifulSoup
+import json
+
+from errors import *
 
 
 class Parser(abc.ABC):
@@ -25,30 +29,35 @@ class Parser(abc.ABC):
         """
         self.search_fields = search_fields
 
-    @abc.abstractmethod
-    def _create_request(self) -> requests.Request:
+    def _create_request(self, keyword: str) -> requests.PreparedRequest:
         """
+        :param keyword: get a keyword for create request
+
         Creating request to the site from self.url + self.search_field
         :return: Request obj
         """
-        pass
+        url = self.search_url.format(keyword)
+        return requests.Request(url=url, method='GET').prepare()
 
-    @abc.abstractmethod
-    def make_request(self, request: requests.Request) -> requests.Response:
+    def make_request(self, request: requests.PreparedRequest) -> str:
         """
         Pass request to the site
         :param request: Request obj
-
         :return:  Response obj
         """
-        pass
+        session = requests.Session()
+        response = session.send(request)
+        if response.status_code != 200:
+            raise Not200RequesCode('Error with search request.'
+                                   'Current code is: ', response.status_code)
+        return response.content
 
     @abc.abstractmethod
-    def parse_response(self, response: requests.Response) -> dict:
+    def parse_response(self, content: str) -> dict:
         """
         Parser manager of response
 
-        :param response:  Response obj
+        :param content: content of response(html)
         :return: Parsed info in dict format
         """
         pass
@@ -58,21 +67,33 @@ class Parser(abc.ABC):
         Loop each keyword in self.search_fields and launch full
         :return: dict with parsed info
         """
+        data = {}
         for keyword in self.search_fields:
-
+            request = self._create_request(keyword)
+            response = self.make_request(request)
+            data[keyword] = self.parse_response(response)
+            break
+        return data
 
 
 class TproggerParser(Parser):
 
     parser_name = 'tproger.ru parser'
     url = 'https://tproger.ru/'
-    search_url = 'https://tproger.ru/search/?q='
+    search_url = 'https://cse.google.com/cse/element/v1?rsz=filtered_cse&num=10&hl=ru&source=gcsc' \
+                 '&gss=.ru&cselibv=57975621473fd078&cx=partner-pub-9189593931769509:9105321070&q={}' \
+                 '&safe=off&cse_tok=AJvRUv0i_A115uJUfuYZUeCUD7Rw:1592494068316&exp=csqr,cc,' \
+                 '4355059&callback=google.search.cse.api5275'
+    python_tag_url = 'https://tproger.ru/tag/python/'
 
-    def _create_request(self):
-        # self.search_url +=
-        pass
-
-    def mana
+    def parse_response(self, content: str) -> dict:
+        content = content.decode('utf-8')
+        start = content.find('{')
+        end = content.rfind('}') + 1
+        data = json.loads(content[start:end])
+        print(data)
 
 class HabrParser(Parser):
     pass
+
+
