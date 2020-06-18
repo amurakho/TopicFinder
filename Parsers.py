@@ -29,14 +29,15 @@ class Parser(abc.ABC):
         """
         self.search_fields = search_fields
 
-    def _create_request(self, keyword: str) -> requests.PreparedRequest:
+    def _create_request(self, keyword: str, base_url: str) -> requests.PreparedRequest:
         """
         :param keyword: get a keyword for create request
+        :param base_url: base url for search url creating
 
         Creating request to the site from self.url + self.search_field
         :return: Request obj
         """
-        url = self.search_url.format(keyword)
+        url = base_url.format(keyword)
         return requests.Request(url=url, method='GET').prepare()
 
     def make_request(self, request: requests.PreparedRequest) -> str:
@@ -62,18 +63,13 @@ class Parser(abc.ABC):
         """
         pass
 
+    @abc.abstractmethod
     def manage(self) -> dict:
         """
         Loop each keyword in self.search_fields and launch full
         :return: dict with parsed info
         """
-        data = {}
-        for keyword in self.search_fields:
-            request = self._create_request(keyword)
-            response = self.make_request(request)
-            data[keyword] = self.parse_response(response)
-            break
-        return data
+        pass
 
 
 class TproggerParser(Parser):
@@ -84,7 +80,9 @@ class TproggerParser(Parser):
                  '&gss=.ru&cselibv=57975621473fd078&cx=partner-pub-9189593931769509:9105321070&q={}' \
                  '&safe=off&cse_tok=AJvRUv0i_A115uJUfuYZUeCUD7Rw:1592494068316&exp=csqr,cc,' \
                  '4355059&callback=google.search.cse.api5275'
-    python_tag_url = 'https://tproger.ru/tag/python/'
+    tprogger_tag_url = 'https://tproger.ru/tag/{}/'
+    tprogger_tags_list = ['python', 'javascript', 'go', 'java', 'cpp', 'c-sharp', 'php',
+                          'css', 'sql']
 
     def parse_response(self, content: str) -> dict:
         content = content.decode('utf-8')
@@ -92,6 +90,21 @@ class TproggerParser(Parser):
         end = content.rfind('}') + 1
         data = json.loads(content[start:end])
         print(data)
+
+    def create_request(self, keyword: str) -> requests.PreparedRequest:
+        if keyword in self.tprogger_tags_list:
+            return self._create_request(keyword, self.tprogger_tag_url)
+        else:
+            return self._create_request(keyword, self.search_url)
+
+    def manage(self):
+        data = {}
+        for keyword in self.search_fields:
+            request = self.create_request(keyword)
+            response = self.make_request(request)
+            data[keyword] = self.parse_response(response)
+            break
+        return data
 
 class HabrParser(Parser):
     pass
