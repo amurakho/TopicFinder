@@ -35,7 +35,7 @@ class Parser(abc.ABC):
         :param base_url: base url for search url creating
 
         Creating request to the site from self.url + self.search_field
-        :return: Request obj
+        :return: Request obj(prepared)
         """
         url = base_url.format(keyword)
         return requests.Request(url=url, method='GET').prepare()
@@ -54,7 +54,7 @@ class Parser(abc.ABC):
         return response.content
 
     @abc.abstractmethod
-    def parse_response(self, content: str) -> dict:
+    def parse_content(self, content: str) -> dict:
         """
         Parser manager of response
 
@@ -72,39 +72,6 @@ class Parser(abc.ABC):
         pass
 
 
-class TproggerParser(Parser):
-
-    parser_name = 'tproger.ru parser'
-    url = 'https://tproger.ru/'
-    search_url = 'https://cse.google.com/cse/element/v1?rsz=filtered_cse&num=10&hl=ru&source=gcsc' \
-                 '&gss=.ru&cselibv=57975621473fd078&cx=partner-pub-9189593931769509:9105321070&q={}' \
-                 '&safe=off&cse_tok=AJvRUv0i_A115uJUfuYZUeCUD7Rw:1592494068316&exp=csqr,cc,' \
-                 '4355059&callback=google.search.cse.api5275'
-    tprogger_tag_url = 'https://tproger.ru/tag/{}/'
-    tprogger_tags_list = ['python', 'javascript', 'go', 'java', 'cpp', 'c-sharp', 'php',
-                          'css', 'sql']
-
-    def parse_response(self, content: str) -> dict:
-        content = content.decode('utf-8')
-        start = content.find('{')
-        end = content.rfind('}') + 1
-        data = json.loads(content[start:end])
-        print(data)
-
-    def create_request(self, keyword: str) -> requests.PreparedRequest:
-        if keyword in self.tprogger_tags_list:
-            return self._create_request(keyword, self.tprogger_tag_url)
-        else:
-            return self._create_request(keyword, self.search_url)
-
-    def manage(self):
-        data = {}
-        for keyword in self.search_fields:
-            request = self.create_request(keyword)
-            response = self.make_request(request)
-            data[keyword] = self.parse_response(response)
-            break
-        return data
 
 class HabrParser(Parser):
     pass
