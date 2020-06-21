@@ -2,6 +2,7 @@ import requests
 import abc
 from abstractParser import Parser
 import json
+import time
 
 
 class Strategy(abc.ABC):
@@ -47,23 +48,26 @@ class TproggerSearchStrategy(Strategy):
 
     def __init__(self, keyword: str, is_paginate=False, per_page=20, max_depth=10):
         """
-
         :param keyword: searching word
         :param is_paginate: if need paginate
         :param per_page: result per page(20 is ok)
         :param max_depth: if paginate, how deeper needed parse
+
+        cse_token: token for auth and pass search request to google
         """
         self.data = []
         self.is_paginate = is_paginate
         self.per_page = per_page
         self.keyword = keyword
         self.max_depth = max_depth
+        self.cse_token = ''
 
-
-    def get_dict(self, content: dict):
+    def parse_json_to_dict(self, content: dict):
         """
         Format getting data to dict data
         :param content: parsed data
+
+        :return if page are empty - False else - True
         """
         results = content.get('results')
         if not results:
@@ -90,7 +94,7 @@ class TproggerSearchStrategy(Strategy):
     @staticmethod
     def _decode_content(content: bytes):
         """
-            Get json part and decode if
+        Get json part and decode if
         :return: decoded content
         """
         content = content.decode('utf-8')
@@ -99,18 +103,21 @@ class TproggerSearchStrategy(Strategy):
         content = json.loads(content[start:end])
         return content
 
-    def parse_response(self, content: bytes):
+    def parse_response(self, content: bytes, depth=0):
         """
         Scrape and format to dict
         """
-        while True:
-            content = self._decode_content(content)
-            # get_dict meth are try to get data from content and if it exist - return True, else - False.
-            # so if there is no data in content - quit from meth and return data
-            if not self.get_dict(content):
-                print('**********')
-                return self.data
+        content = self._decode_content(content)
+        # parse_json_to_dict meth are try to get data from content
+        # and if it exist - return True, else - False.
+        not_empty = self.parse_json_to_dict(content)
+        print('Here')
+        if self.is_paginate and not_empty and depth < self.max_depth:
             content = self._pagination()
+            time.sleep(60)
+            self.parse_response(content, depth=depth+1)
+        else:
+            return self.data
 
     @staticmethod
     def get_cse_token():
@@ -129,7 +136,6 @@ class TproggerSearchStrategy(Strategy):
     def create_request(self, keyword: str) -> requests.PreparedRequest:
         self.cse_token = self.get_cse_token()
         url = self.parsed_url.format(keyword=keyword, num=20, start=0, cse=self.cse_token)
-        print(url)
         return requests.Request(url=url, method='GET').prepare()
 
 
@@ -149,8 +155,8 @@ class TproggerParser(Parser):
         return self.__strategy
 
     @strategy.setter
-    def strategy(self, strategy):
-        self.__strategy = strategy
+    def strategy(self, strategy_arg):
+        self.__strategy = strategy_arg
 
     def parse_content(self, content: str) -> dict:
         return self.strategy.parse_response(content)
@@ -163,12 +169,10 @@ class TproggerParser(Parser):
         for keyword in self.search_fields:
             # choose strategy
             if keyword in self.tprogger_tags_list:
-                self.strategy = TproggerTagStrategy()
+                self.strategy = TproggerTagStrategy(keyword=keyword)
             else:
                 self.strategy = TproggerSearchStrategy(keyword=keyword)
-
-
-
+            # create request
             request = self._create_request(keyword)
             content = self.make_request(request)
             data[keyword] = self.parse_content(content)
