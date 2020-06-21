@@ -9,21 +9,26 @@ class Strategy(abc.ABC):
     parsed_url = ''
     keyword = ''
 
-
     @abc.abstractmethod
     def parse_response(self, content:str) -> dict:
         pass
 
     @abc.abstractmethod
-    def create_request(self, keyword: str) -> requests.PreparedRequest:
+    def create_request(self) -> requests.PreparedRequest:
         pass
 
 
 class TproggerTagStrategy(Strategy):
     parsed_url = 'https://tproger.ru/tag/{}/'
 
+    def __init__(self, keyword):
+        self.keyword = keyword
+
     def parse_response(self, content: str):
         print(content)
+
+    def create_request(self):
+        self.parsed_url.format(self.keyword)
 
 
 class TproggerSearchStrategy(Strategy):
@@ -133,9 +138,9 @@ class TproggerSearchStrategy(Strategy):
         token = response.split(',')[0].strip()
         return token[1:-1]
 
-    def create_request(self, keyword: str) -> requests.PreparedRequest:
+    def create_request(self) -> requests.PreparedRequest:
         self.cse_token = self.get_cse_token()
-        url = self.parsed_url.format(keyword=keyword, num=20, start=0, cse=self.cse_token)
+        url = self.parsed_url.format(keyword=self.keyword, num=20, start=0, cse=self.cse_token)
         return requests.Request(url=url, method='GET').prepare()
 
 
@@ -174,6 +179,7 @@ class TproggerParser(Parser):
                 self.strategy = TproggerSearchStrategy(keyword=keyword)
             # create request
             request = self._create_request(keyword)
+            # pass request
             content = self.make_request(request)
             data[keyword] = self.parse_content(content)
             break
