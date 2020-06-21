@@ -1,7 +1,8 @@
 import abc
 
 from const import PROGRAMMING_KEYWORDS
-from Parsers import TproggerParser, Parser, HabrParser
+from abstractParser import Parser, HabrParser
+from TproggerParser import TproggerParser
 
 
 class ScrapperFabric(abc.ABC):
@@ -48,3 +49,5 @@ def launch_fabrics(site: str):
 if __name__ == '__main__':
     parser = launch_fabrics('tproger')
     parser.manage()
+
+

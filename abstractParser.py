@@ -29,7 +29,8 @@ class Parser(abc.ABC):
         """
         self.search_fields = search_fields
 
-    def _create_request(self, keyword: str, base_url: str) -> requests.PreparedRequest:
+    @abc.abstractmethod
+    def _create_request(self, keyword: str) -> requests.PreparedRequest:
         """
         :param keyword: get a keyword for create request
         :param base_url: base url for search url creating
@@ -37,8 +38,7 @@ class Parser(abc.ABC):
         Creating request to the site from self.url + self.search_field
         :return: Request obj(prepared)
         """
-        url = base_url.format(keyword)
-        return requests.Request(url=url, method='GET').prepare()
+        pass
 
     def make_request(self, request: requests.PreparedRequest) -> str:
         """
