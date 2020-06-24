@@ -1,9 +1,5 @@
 import requests
 import abc
-import asyncio
-import aiohttp
-from bs4 import BeautifulSoup
-import json
 
 from errors import *
 
@@ -16,18 +12,20 @@ class Parser(abc.ABC):
     :param self.request_delay: Delay between requests
     :param self.url: url of parsed site
     """
-
     parser_name = None
     request_delay = 1
     request = None
     url = None
     search_url = None
 
-    def __init__(self,  search_fields: list):
-        """
-        :param search_fields: field which will search(['Python', 'Django'])
-        """
-        self.search_fields = search_fields
+    # def __init__(self,  search_fields: list):
+    #     """
+    #     :param search_fields: field which will search(['Python', 'Django'])
+    #     :param strategy: choose strategy for mech
+    #     """
+    #     # self.strategy =
+    #
+    #     self.search_fields = search_fields
 
     @abc.abstractmethod
     def _create_request(self, keyword: str) -> requests.PreparedRequest:
@@ -70,17 +68,3 @@ class Parser(abc.ABC):
         :return: dict with parsed info
         """
         pass
-
-
-class HabrParser(Parser):
-
-    def parse_content(self, content: str):
-        raise NotImplementedError('This method are not implemented')
-
-    def _create_request(self, keyword: str):
-        raise NotImplementedError('This method are not implemented')
-
-    def start_parse(self):
-        raise NotImplementedError('This parser are not implemented')
-
-

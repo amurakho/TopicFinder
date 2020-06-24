@@ -1,7 +1,8 @@
 import abc
 
 from const import PROGRAMMING_KEYWORDS
-from parsers._abcparser import Parser, HabrParser
+from parsers._abcparser import Parser
+from parsers.habrparser import HabrParser
 from parsers.tproggerparser import TproggerParser
 
 
@@ -48,6 +49,6 @@ def launch_fabrics(site: str):
 
 if __name__ == '__main__':
     parser = launch_fabrics('tproger')
-    parser.manage()
+    parser.start_parse()
 
 

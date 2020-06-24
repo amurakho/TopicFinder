@@ -183,9 +183,9 @@ class TproggerParser(Parser):
     tprogger_tags_list = ['python', 'javascript', 'go', 'java', 'cpp', 'c-sharp', 'php',
                           'css', 'sql']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, search_fields: list):
         self.__strategy = None
+        self.search_fields = search_fields
 
     @property
     def strategy(self) -> Strategy:
@@ -215,6 +215,5 @@ class TproggerParser(Parser):
             content = self.make_request(request)
 
             data[keyword] = self.parse_content(content)
-            break
         print(len(data['python']))
         return data
