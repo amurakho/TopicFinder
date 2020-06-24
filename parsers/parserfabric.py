@@ -1,8 +1,8 @@
 import abc
 
 from const import PROGRAMMING_KEYWORDS
-from abstractParser import Parser, HabrParser
-from TproggerParser import TproggerParser
+from parsers._abcparser import Parser, HabrParser
+from parsers.tproggerparser import TproggerParser
 
 
 class ScrapperFabric(abc.ABC):

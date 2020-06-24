@@ -64,7 +64,7 @@ class Parser(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def manage(self) -> dict:
+    def start_parse(self) -> dict:
         """
         Loop each keyword in self.search_fields and launch full
         :return: dict with parsed info
@@ -72,8 +72,15 @@ class Parser(abc.ABC):
         pass
 
 
-
 class HabrParser(Parser):
-    pass
+
+    def parse_content(self, content: str):
+        raise NotImplementedError('This method are not implemented')
+
+    def _create_request(self, keyword: str):
+        raise NotImplementedError('This method are not implemented')
+
+    def start_parse(self):
+        raise NotImplementedError('This parser are not implemented')
 
 

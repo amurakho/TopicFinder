@@ -4,7 +4,7 @@ import json
 import time
 from bs4 import BeautifulSoup
 
-from abstractParser import Parser
+from parsers._abcparser import Parser
 
 
 class Strategy(abc.ABC):
@@ -201,7 +201,7 @@ class TproggerParser(Parser):
     def _create_request(self, keyword: str) -> requests.PreparedRequest:
         return self.strategy.create_request()
 
-    def manage(self):
+    def start_parse(self):
         data = {}
         for keyword in self.search_fields:
             # choose strategy
