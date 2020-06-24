@@ -12,12 +12,18 @@ from const import KEYWORDS
 """
 
 
+
 # def main():
 #     for key, keywords in KEYWORDS.items():
 #         for keyword in keywords:
 #             if key == 'politics':
+#                 pass
 #             elif key == 'programming':
 #                 pass
-#
-# if __name__ == '__main__':
-#     main()
+
+def potics_create(factory, ):
+    if
+
+if __name__ == '__main__':
+    from
+    # main()
