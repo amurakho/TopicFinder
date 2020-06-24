@@ -40,7 +40,7 @@ class TproggerTagStrategy(Strategy):
         """
         url = 'https://tproger.ru/tag/python/page/{}'.format(page)
         result = requests.get(url=url)
-        return result.content.decode('utf-8')
+        return result.content
 
     def parse_response(self, content: str, depth=0):
         soup = BeautifulSoup(content)
@@ -58,10 +58,10 @@ class TproggerTagStrategy(Strategy):
             self.data.append(t)
 
         if self.is_paginate and hrefs and depth < self.max_depth:
-            content = self._pagination(page=depth+2)
+            content = self._pagination(page=depth+2).decode('utf-8')
+            time.sleep(10)
             self.parse_response(content, depth=depth+1)
-        else:
-            return self.data
+        return self.data
 
 
 class TproggerSearchStrategy(Strategy):
@@ -154,8 +154,7 @@ class TproggerSearchStrategy(Strategy):
             content = self._pagination(page=(depth+2)*10)
             time.sleep(10)
             self.parse_response(content, depth=depth+1)
-        else:
-            return self.data
+        return self.data
 
     @staticmethod
     def get_cse_token():
@@ -217,5 +216,5 @@ class TproggerParser(Parser):
 
             data[keyword] = self.parse_content(content)
             break
-        print(data)
+        print(len(data['python']))
         return data
