@@ -3,4 +3,4 @@ SITES = {
     'habr': 'https://habr.com/'
 }
 
-PROGRAMMING_KEYWORDS = ['django', 'python']
+PROGRAMMING_KEYWORDS = ['django', 'python',  ]

@@ -1,8 +1,10 @@
 import requests
 import abc
-from abstractParser import Parser
 import json
 import time
+from bs4 import BeautifulSoup
+
+from abstractParser import Parser
 
 
 class Strategy(abc.ABC):
@@ -10,7 +12,7 @@ class Strategy(abc.ABC):
     keyword = ''
 
     @abc.abstractmethod
-    def parse_response(self, content:str) -> dict:
+    def parse_response(self, content: str) -> dict:
         pass
 
     @abc.abstractmethod
@@ -21,14 +23,45 @@ class Strategy(abc.ABC):
 class TproggerTagStrategy(Strategy):
     parsed_url = 'https://tproger.ru/tag/{}/'
 
-    def __init__(self, keyword):
+    def __init__(self, keyword: str, is_paginate=False, max_depth=10):
         self.keyword = keyword
-
-    def parse_response(self, content: str):
-        print(content)
+        self.data = []
+        self.is_paginate = is_paginate
+        self.max_depth = max_depth
 
     def create_request(self):
-        self.parsed_url.format(self.keyword)
+        url = self.parsed_url.format(self.keyword)
+        return requests.Request(url=url, method='GET').prepare()
+
+    def _pagination(self, page: int):
+        """
+            Send request with new data to paginate and return new response
+        :return: Response of new page
+        """
+        url = 'https://tproger.ru/tag/python/page/{}'.format(page)
+        result = requests.get(url=url)
+        return result.content.decode('utf-8')
+
+    def parse_response(self, content: str, depth=0):
+        soup = BeautifulSoup(content)
+        hrefs = soup.find_all('a', class_='article-link')
+        titles = soup.find_all('h2', class_='entry-title')
+        texts = soup.find_all('div', class_='entry-content')
+
+        for href, title, text in zip(hrefs, titles, texts):
+            t = {
+                'title': title.get_text(),
+                'text': text.get_text(),
+                'url': href['href'],
+                'pub_date': None,
+            }
+            self.data.append(t)
+
+        if self.is_paginate and hrefs and depth < self.max_depth:
+            content = self._pagination(page=depth+2)
+            self.parse_response(content, depth=depth+1)
+        else:
+            return self.data
 
 
 class TproggerSearchStrategy(Strategy):
@@ -87,13 +120,14 @@ class TproggerSearchStrategy(Strategy):
             self.data.append(t)
         return True
 
-    def _pagination(self):
+    def _pagination(self, page: int):
         """
             Send request with new data to paginate and return new response
         :return: Response of new page
         """
-        url = self.parsed_url.format(num=20, start=20, keyword=self.keyword, cse=self.cse_token)
+        url = self.parsed_url.format(num=20, start=page, keyword=self.keyword, cse=self.cse_token)
         result = requests.get(url=url)
+        print('Status code: ', result.status_code)
         return result.content
 
     @staticmethod
@@ -116,10 +150,9 @@ class TproggerSearchStrategy(Strategy):
         # parse_json_to_dict meth are try to get data from content
         # and if it exist - return True, else - False.
         not_empty = self.parse_json_to_dict(content)
-        print('Here')
         if self.is_paginate and not_empty and depth < self.max_depth:
-            content = self._pagination()
-            time.sleep(60)
+            content = self._pagination(page=(depth+2)*10)
+            time.sleep(10)
             self.parse_response(content, depth=depth+1)
         else:
             return self.data
@@ -167,7 +200,7 @@ class TproggerParser(Parser):
         return self.strategy.parse_response(content)
 
     def _create_request(self, keyword: str) -> requests.PreparedRequest:
-        return self.strategy.create_request(keyword)
+        return self.strategy.create_request()
 
     def manage(self):
         data = {}
@@ -181,6 +214,7 @@ class TproggerParser(Parser):
             request = self._create_request(keyword)
             # pass request
             content = self.make_request(request)
+
             data[keyword] = self.parse_content(content)
             break
         print(data)
