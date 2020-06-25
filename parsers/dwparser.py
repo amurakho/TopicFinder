@@ -25,7 +25,7 @@ class AbstractSearchParser(abc.ABC):
     """
     keyword = ''
 
-    def __init__(self, is_paginate=True, max_depth=10):
+    def __init__(self, is_paginate=False, max_depth=10):
         self.is_paginate = is_paginate
         self.max_depth = max_depth
 
@@ -97,15 +97,21 @@ class AbstractSearchParser(abc.ABC):
 
 class DwParserSearch(AbstractSearchParser):
 
-    url = 'https://www.dw.com/search/en?languageCode=en&origin=gN&item={}'
+    url = 'https://www.dw.com/research/?languageCode=en&item={keyword}' \
+          '&searchNavigationId=9097-1452-32771-2469-30687-101618-8120&sort=DATE&' \
+          'resultsCounter={counter}'
 
     base_url = 'https://www.dw.com'
 
     def _pagination(self):
-        pass
+        raise NotImplementedError('This method are not implemet because DW give as'
+                                  'so big response as we need')
 
     def _create_request(self) -> requests.PreparedRequest:
-        url = self.url.format(self.keyword)
+        if self.is_paginate:
+            url = self.url.format(keyword=self.keyword, counter=500)
+        else:
+            url = self.url.format(keyword=self.keyword, counter=100)
         return requests.Request(url=url, method='GET').prepare()
 
     def parse_content(self, content, depth=0):
@@ -122,9 +128,6 @@ class DwParserSearch(AbstractSearchParser):
                 'pub_date': block.find('span', {'class': 'date'}).get_text()
             }
             data.append(t)
-
-        # if self.is_paginate and depth < self.max_depth and data:
-        #     content = self._pagination()
         return data
 
 
