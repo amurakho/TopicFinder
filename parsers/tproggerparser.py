@@ -38,7 +38,7 @@ class TproggerTagStrategy(Strategy):
             Send request with new data to paginate and return new response
         :return: Response of new page
         """
-        url = 'https://tproger.ru/tag/python/page/{}'.format(page)
+        url = 'https://tproger.ru/tag/{}/page/{}'.format(self.keyword, page)
         result = requests.get(url=url)
         return result.content
 

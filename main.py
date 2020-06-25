@@ -1,4 +1,5 @@
 from const import KEYWORDS
+from parsers.dwparser import DwParsersFactory
 
 """
     Main part - launch all
@@ -11,19 +12,16 @@ from const import KEYWORDS
         Telegram - by channel
 """
 
+POLITICS_FABRICS = []
 
+PROGGER_FABRICS = []
 
-# def main():
-#     for key, keywords in KEYWORDS.items():
-#         for keyword in keywords:
-#             if key == 'politics':
-#                 pass
-#             elif key == 'programming':
-#                 pass
-
-def potics_create(factory, ):
-    if
 
 if __name__ == '__main__':
-    from
-    # main()
+    from const import POLITICS_KEYWORDS
+    fac = DwParsersFactory()
+    p = fac.create_search_parser()
+    for keyword in POLITICS_KEYWORDS:
+        data = p.start_parse(keyword)
+        print(data)
+        break
