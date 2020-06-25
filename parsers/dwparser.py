@@ -3,22 +3,47 @@ import abc
 from bs4 import BeautifulSoup
 
 from errors import Not200RequesCode
-from parsers._abcparserfabric import AbstractFactory, AbstractParser
+from parsers._abcparserfabric import AbstractFactory, AbstractSearchParser, AbstractTopParser
+
+DW_BASE_URL =  'https://www.dw.com'
 
 
-class DwParserTop(AbstractParser):
+class DwParserTop(AbstractTopParser):
 
-    def _pagination(self) -> str:
-        pass
+    url = 'https://www.dw.com/en/top-stories/s-9097'
 
-    def _create_request(self) -> requests.PreparedRequest:
-        pass
+    def parse_blocks(self, blocks, data):
+        for block in blocks:
+            text_block = block.find('p')
+            t = {
+                'href': DW_BASE_URL + block.find('a')['href'],
+                'title': block.find('h2').get_text(),
+                'pub_data': None,
+                'text': text_block.get_text() if text_block else None
+            }
+            data.append(t)
+            #todo: break
 
-    def parse_content(self, content: str) -> dict:
-        pass
+    def parse_content(self, content: bytes):
+        soup = BeautifulSoup(content)
+        data = []
+
+        # parse main part
+        blocks = soup.find_all('div', {'class': 'basicTeaser'})
+        self.parse_blocks(blocks, data)
+
+        # parse most read
+        blocks = soup.find_all('div', {'class': 'linkList'})
+        self.parse_blocks(blocks, data)
+
+        # parse by country
+        blocks = soup.find_all('div', {'class': 'searchres'})
+        self.parse_blocks(blocks, data)
+
+        return data
 
 
-class DwParserSearch(AbstractParser):
+class DwParserSearch(AbstractSearchParser):
     """
 
     NOTE: Go to AbstractSearchParser to see more code
@@ -60,10 +85,10 @@ class DwParserSearch(AbstractParser):
 
 class DwParsersFactory(AbstractFactory):
 
-    def create_search_parser(self) -> AbstractParser:
+    def create_search_parser(self) -> AbstractSearchParser:
         return DwParserSearch()
 
-    def create_top_parser(self) -> AbstractParser:
+    def create_top_parser(self) -> AbstractTopParser:
         return DwParserTop()
 
 

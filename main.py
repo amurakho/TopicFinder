@@ -20,8 +20,10 @@ PROGGER_FABRICS = []
 if __name__ == '__main__':
     from const import POLITICS_KEYWORDS
     fac = DwParsersFactory()
-    p = fac.create_search_parser()
-    for keyword in POLITICS_KEYWORDS:
-        data = p.start_parse(keyword)
-        print(data)
-        break
+    p = fac.create_top_parser()
+    data = p.start_parse()
+    print(len(data))
+    # for keyword in POLITICS_KEYWORDS:
+    #     data = p.start_parse(keyword)
+    #     print(data)
+    #     break

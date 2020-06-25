@@ -15,7 +15,38 @@ class AbstractFactory(abc.ABC):
         pass
 
 
-class AbstractParser(abc.ABC):
+class AbstractTopParser(abc.ABC):
+
+    keyword = ''
+    url = ''
+
+    @abc.abstractmethod
+    def parse_content(self, content: bytes):
+        pass
+
+    def pass_request(self):
+        response = requests.get(self.url)
+        return response.content
+
+    def start_parse(self):
+        """
+        Manage
+
+        1. Create and pass request
+        2. Parse data
+
+        :param keyword:
+        :return:
+        """
+
+        content = self.pass_request()
+
+        data = self.parse_content(content)
+
+        return data
+
+
+class AbstractSearchParser(abc.ABC):
     """
     Interface for "search" parsers.
 
