@@ -2,10 +2,11 @@ import requests
 import abc
 from bs4 import BeautifulSoup
 
+
 from errors import Not200RequesCode
 from parsers._abcparserfabric import AbstractFactory, AbstractSearchParser, AbstractTopParser
 
-DW_BASE_URL =  'https://www.dw.com'
+DW_BASE_URL = 'https://www.dw.com'
 
 
 class DwParserTop(AbstractTopParser):
@@ -22,7 +23,6 @@ class DwParserTop(AbstractTopParser):
                 'text': text_block.get_text() if text_block else None
             }
             data.append(t)
-            #todo: break
 
     def parse_content(self, content: bytes):
         soup = BeautifulSoup(content)
@@ -57,7 +57,8 @@ class DwParserSearch(AbstractSearchParser):
 
     def _pagination(self):
         raise NotImplementedError('This method are not implemet because DW give as'
-                                  'so big response as we need')
+                                  'so big response as we need(counter variable in _create_request'
+                                  'for count results)')
 
     def _create_request(self) -> requests.PreparedRequest:
         if self.is_paginate:
@@ -67,7 +68,7 @@ class DwParserSearch(AbstractSearchParser):
         return requests.Request(url=url, method='GET').prepare()
 
     def parse_content(self, content, depth=0):
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'lxml')
         blocks = soup.find_all('div', {'class': 'searchResult'})
 
         data = []

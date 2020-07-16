@@ -66,7 +66,7 @@ class TproggerTagStrategy(Strategy):
 
 class TproggerSearchStrategy(Strategy):
     """
-    Strategy when i need parse page from tags
+    Strategy when i need parse page from "search words"
 
     Note: tporgger use google service for search. And google api
     use some cookie - cse_token for auth the site.
@@ -215,5 +215,52 @@ class TproggerParser(Parser):
             content = self.make_request(request)
 
             data[keyword] = self.parse_content(content)
-        print(len(data['python']))
+        print(len(data['django']))
         return data
+
+
+# import abc
+# class AbcParent(abc.ABC):
+#
+#     @abc.abstractmethod
+#     def some(self):
+#         pass
+#
+#
+# class EmptyParent(AbcParent):
+#
+#     def some(self):
+#         raise NotImplementedError('Wrong parent')
+#
+#
+# class SParent(AbcParent):
+#
+#     def some(self):
+#         print('Hello from s parent')
+#
+#
+# class FParent(AbcParent):
+#
+#     def some(self):
+#         print('Hello from F parent')
+#
+#
+# class Ch:
+#     def __init__(self, parent):
+#         self.parend = parent
+#
+#     def some(self):
+#         self.parend.some()
+#
+#
+# if __name__ == '__main__':
+#     res = input('Choose parent(f/s): ')
+#     if res == 'f':
+#         parent = FParent()
+#     elif res == 's':
+#         parent = SParent()
+#     else:
+#         parent = EmptyParent()
+#
+#
+#     c  = Ch(parent)
