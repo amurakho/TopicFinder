@@ -17,7 +17,7 @@ class DwParserTop(AbstractTopParser):
         for block in blocks:
             text_block = block.find('p')
             t = {
-                'href': DW_BASE_URL + block.find('a')['href'],
+                'url': DW_BASE_URL + block.find('a')['href'],
                 'title': block.find('h2').get_text(),
                 'pub_data': None,
                 'text': text_block.get_text() if text_block else None
@@ -25,7 +25,7 @@ class DwParserTop(AbstractTopParser):
             data.append(t)
 
     def parse_content(self, content: bytes):
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content, 'lxml')
         data = []
 
         # parse main part
@@ -61,6 +61,9 @@ class DwParserSearch(AbstractSearchParser):
                                   'for count results)')
 
     def _create_request(self) -> requests.PreparedRequest:
+        if not self.keyword:
+            raise NotImplementedError('Need keyword')
+
         if self.is_paginate:
             url = self.url.format(keyword=self.keyword, counter=500)
         else:

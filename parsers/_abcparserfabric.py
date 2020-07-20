@@ -17,7 +17,6 @@ class AbstractFactory(abc.ABC):
 
 class AbstractTopParser(abc.ABC):
 
-    keyword = ''
     url = ''
 
     @abc.abstractmethod
