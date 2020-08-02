@@ -1,12 +1,11 @@
 import requests
-import abc
 from bs4 import BeautifulSoup
 
-
+from const import POLITICS_SITES
 from errors import Not200RequesCode
 from parsers._abcparserfabric import AbstractFactory, AbstractSearchParser, AbstractTopParser
 
-DW_BASE_URL = 'https://www.dw.com'
+DW_BASE_URL = POLITICS_SITES.get('dw')
 
 
 class DwParserTop(AbstractTopParser):
