@@ -1,3 +1,5 @@
+import pathlib
+
 PROGRAMMING_SITES = {
     'tproger': 'https://tproger.ru/',
     'habr': 'https://habr.com/'
@@ -25,3 +27,16 @@ KEYWORDS = {
     'politics': POLITICS_KEYWORDS,
     'programming': PROGRAMMING_KEYWORDS,
 }
+
+PATH = pathlib.Path().absolute()
+
+COMMANDS = (
+    'run',
+    'test',
+)
+
+HELP_TEXT = """
+    COMMANDS : {}
+""".format(COMMANDS)
+
+TEST_FOLDER_PATH = PATH.joinpath('tests')
