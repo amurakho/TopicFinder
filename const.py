@@ -28,7 +28,7 @@ KEYWORDS = {
     'programming': PROGRAMMING_KEYWORDS,
 }
 
-PATH = pathlib.Path().absolute()
+PATH = pathlib.Path(__file__).resolve().parent.parent
 
 COMMANDS = (
     'run',
@@ -40,3 +40,5 @@ HELP_TEXT = """
 """.format(COMMANDS)
 
 TEST_FOLDER_PATH = PATH.joinpath('tests')
+
+PARSER_FOLDER_PATH = PATH.joinpath('parsers')
