@@ -20,6 +20,7 @@ class CnnParserTop(AbstractTopParser):
     def parse_blocks(self, blocks, data):
         pass
 
+
 class CnnParserSearch(AbstractSearchParser):
     pass
     #cd__headline

@@ -11,7 +11,6 @@ class Commands:
         suite = unittest.TestLoader().discover(str(const.TEST_FOLDER_PATH))
         unittest.TextTestRunner(verbosity=2).run(suite)
 
-
     def run(self):
         print('RUN')
         pass
