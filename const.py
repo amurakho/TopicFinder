@@ -42,3 +42,5 @@ HELP_TEXT = """
 TEST_FOLDER_PATH = 'tests'
 
 PARSER_FOLDER = 'parsers'
+
+DB_FOLDER = 'db'

@@ -29,7 +29,9 @@ class CnnParserSearch(AbstractSearchParser):
 class ParsersFactory(AbstractFactory):
 
     def create_search_parser(self) -> AbstractSearchParser:
-        return CnnParserSearch()
+        return None
+        # return CnnParserSearch()
 
     def create_top_parser(self) -> AbstractTopParser:
-        return CnnParserTop()
+        return None
+        # return CnnParserTop()

@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 import os
 
-if os.path.exists('some.db'):
-    os.remove('some.db')
+if os.path.exists('../some.db'):
+    os.remove('../some.db')
 e = create_engine('sqlite:///some.db')
 e.execute("""
     create table employee (

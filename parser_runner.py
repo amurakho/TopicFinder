@@ -35,8 +35,11 @@ def launch_top_parsers(factory):
 def save_to_base(data):
     pass
 
+
 def print_stat(data):
-    pass
+    print(data[0])
+    print(f'Scrapped count: {len(data)}')
+
 
 def run(file_list, keywords=None, save=False):
     for filename in file_list:
@@ -44,18 +47,23 @@ def run(file_list, keywords=None, save=False):
         mod = importlib.import_module(filepath)
 
         factory = mod.ParsersFactory()
+        if not factory:
+            continue
+
         if keywords:
             data = launch_search_parsers(factory, keywords)
         else:
             data = launch_top_parsers(factory)
 
-        # todo: DATA SHOULD BE LIST (CHECK IT)
         if save:
             save_to_base(data)
 
         print_stat(data)
 
 
-if __name__ == '__main__':
+def main():
     file_list = get_all_parsers_modules()
     run(file_list)
+
+if __name__ == '__main__':
+    main()
