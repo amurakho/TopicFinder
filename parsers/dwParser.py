@@ -86,14 +86,10 @@ class DwParserSearch(AbstractSearchParser):
         return data
 
 
-class DwParsersFactory(AbstractFactory):
+class ParsersFactory(AbstractFactory):
 
     def create_search_parser(self) -> AbstractSearchParser:
         return DwParserSearch()
 
     def create_top_parser(self) -> AbstractTopParser:
         return DwParserTop()
-
-
-# class BbcParsersFactory(AbstractFactory):
-#     pass

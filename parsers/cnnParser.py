@@ -26,7 +26,7 @@ class CnnParserSearch(AbstractSearchParser):
     #cd__headline
 
 
-class DwParsersFactory(AbstractFactory):
+class ParsersFactory(AbstractFactory):
 
     def create_search_parser(self) -> AbstractSearchParser:
         return CnnParserSearch()

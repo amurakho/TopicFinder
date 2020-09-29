@@ -39,6 +39,6 @@ HELP_TEXT = """
     COMMANDS : {}
 """.format(COMMANDS)
 
-TEST_FOLDER_PATH = PATH.joinpath('tests')
+TEST_FOLDER_PATH = 'tests'
 
-PARSER_FOLDER_PATH = PATH.joinpath('parsers')
+PARSER_FOLDER = 'parsers'

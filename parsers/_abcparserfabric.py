@@ -34,7 +34,6 @@ class AbstractTopParser(abc.ABC):
         1. Create and pass request
         2. Parse data
 
-        :param keyword:
         :return:
         """
 
