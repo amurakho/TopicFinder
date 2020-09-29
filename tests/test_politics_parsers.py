@@ -1,13 +1,13 @@
 import unittest
 import requests
 
-from parsers import dwparser, cnnparser
+from parsers import dwParser, cnnParser
 from parsers._abcparserfabric import AbstractSearchParser
 from parameterized import parameterized_class
 
 search_parsers = (
     {
-        'parser': dwparser.DwParserSearch,
+        'parser': dwParser.DwParserSearch,
         'url': 'https://www.dw.com/search/en?searchNavigationId=9097&languageCode=en&origin=gN&item=test'
     },
     # {
@@ -19,7 +19,7 @@ search_parsers = (
 
 top_parsers = (
     {
-        'parser': dwparser.DwParserTop,
+        'parser': dwParser.DwParserTop,
     },
     # {
     #     'parser': cnnparser.CnnParserTop,

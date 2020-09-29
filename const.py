@@ -28,7 +28,7 @@ KEYWORDS = {
     'programming': PROGRAMMING_KEYWORDS,
 }
 
-PATH = pathlib.Path(__file__).resolve().parent.parent
+PATH = pathlib.Path(__file__).resolve().parent
 
 COMMANDS = (
     'run',

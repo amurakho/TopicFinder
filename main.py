@@ -1,7 +1,7 @@
 from const import KEYWORDS
-from parsers.dwparser import DwParsersFactory
+from parsers.dwParser import DwParsersFactory
 
-from parsers.tproggerparser import TproggerParser
+from parsers.tproggerParser import TproggerParser
 
 """
     Main part - launch all
