@@ -4,3 +4,7 @@ class Not200RequesCode(Exception):
 
 class UnknownCommand(Exception):
     pass
+
+
+class UnknownFlag(Exception):
+    pass
