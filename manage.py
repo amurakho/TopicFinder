@@ -17,11 +17,12 @@ class Commands:
         parser.add_argument('run')
         for flag, data in flags.items():
             action = 'append' if data['additional_args'] else 'store_true'
-            parser.add_argument(flag, action=action)
-        print(parser.parse_args())
-        # args = sys.argv[2:]
-        # flag_names = flags.keys()
+            if data.get('choices'):
+                parser.add_argument(flag, action=action, choices=data.get('choices'))
+            else:
+                parser.add_argument(flag, action=action)
 
+        return vars(parser.parse_args())
 
     def test(self):
         suite = unittest.TestLoader().discover(str(const.TEST_FOLDER_PATH))
@@ -36,7 +37,7 @@ class Commands:
             '-o': {
                 'description': 'Launch scrappers by name',
                 'additional_args': True,
-                'choices': [get_all_parsers_modules()]
+                'choices': [*get_all_parsers_modules()]
             },
             '-k': {
                 'description': 'Launch with keywords',
