@@ -264,3 +264,11 @@ class TproggerParser(Parser):
 #
 #
 #     c  = Ch(parent)
+
+class ParsersFactory:
+
+    def create_search_parser(self):
+        raise NotImplemented
+
+    def create_top_parser(self):
+        raise NotImplemented

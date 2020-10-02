@@ -16,16 +16,6 @@ def parse_add_list(string):
 
 
 class Commands:
-    #
-    # def parse_arguments(self, flags):
-    #     for flag, data in flags.items():
-    #         action = 'append' if data['additional_args'] else 'store_true'
-    #         if data.get('choices'):
-    #         else:
-    #             parser.add_argument(flag, action=action)
-    #
-    #
-    #     return vars(parser.parse_args())
 
     def test(self):
         suite = unittest.TestLoader().discover(str(const.TEST_FOLDER_PATH))

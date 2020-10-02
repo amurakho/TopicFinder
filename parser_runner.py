@@ -42,24 +42,22 @@ def print_stat(data):
 
 
 def run(file_list, settigns):
-    print(settigns)
-    # for filename in file_list:
-    #     filepath = '.'.join((PARSER_FOLDER, filename))
-    #     mod = importlib.import_module(filepath)
-    #
-    #     factory = mod.ParsersFactory()
-    #     if not factory:
-    #         continue
-    #
-    #     if settigns.get('k'):
-    #         data = launch_search_parsers(factory, keywords)
-    #     else:
-    #         data = launch_top_parsers(factory)
-    #
-    #     if settigns.get('s'):
-    #         save_to_base(data)
-    #
-    #     print_stat(data)
+    for filename in file_list:
+        filepath = '.'.join((PARSER_FOLDER, filename))
+        mod = importlib.import_module(filepath)
+
+        factory = mod.ParsersFactory()
+        if not factory:
+            continue
+        # if settigns.get('k'):
+        #     data = launch_search_parsers(factory, settigns['k'])
+        # else:
+        #     data = launch_top_parsers(factory)
+        #
+        # if settigns.get('s'):
+        #     save_to_base(data)
+        #
+        # print_stat(data)
 
 
 def main():

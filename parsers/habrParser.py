@@ -15,3 +15,11 @@ class HabrParser(Parser):
     def start_parse(self):
         raise NotImplementedError('This parser are not implemented')
 
+
+class ParsersFactory:
+
+    def create_search_parser(self):
+        raise NotImplemented
+
+    def create_top_parser(self):
+        raise NotImplemented
