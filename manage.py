@@ -5,47 +5,44 @@ import argparse
 
 import const
 import errors
-from parser_runner import get_all_parsers_modules
+from parser_runner import get_all_parsers_modules, run
 
 logging.basicConfig(level=logging.DEBUG)
 
 
+def parse_add_list(string):
+    data = string.split(' ')
+    return data
+
+
 class Commands:
-
-    def parse_arguments(self, flags):
-        parser = argparse.ArgumentParser(prog='run', description='"run" command parse')
-        parser.add_argument('run')
-        for flag, data in flags.items():
-            action = 'append' if data['additional_args'] else 'store_true'
-            if data.get('choices'):
-                parser.add_argument(flag, action=action, choices=data.get('choices'))
-            else:
-                parser.add_argument(flag, action=action)
-
-        return vars(parser.parse_args())
+    #
+    # def parse_arguments(self, flags):
+    #     for flag, data in flags.items():
+    #         action = 'append' if data['additional_args'] else 'store_true'
+    #         if data.get('choices'):
+    #         else:
+    #             parser.add_argument(flag, action=action)
+    #
+    #
+    #     return vars(parser.parse_args())
 
     def test(self):
         suite = unittest.TestLoader().discover(str(const.TEST_FOLDER_PATH))
         unittest.TextTestRunner(verbosity=2).run(suite)
 
     def run(self):
-        flags = {
-            '-s': {
-                'description': 'Save to db',
-                'additional_args': False,
-            },
-            '-o': {
-                'description': 'Launch scrappers by name',
-                'additional_args': True,
-                'choices': [*get_all_parsers_modules()]
-            },
-            '-k': {
-                'description': 'Launch with keywords',
-                'additional_args': True
-            },
-        }
+        files = get_all_parsers_modules()
 
-        self.parse_arguments(flags)
+        parser = argparse.ArgumentParser(prog='run', description='"run" command parse')
+        parser.add_argument('run')
+        parser.add_argument('-s', action='store_true')
+        parser.add_argument('-o', action='append', choices=files)
+        parser.add_argument('-k', type=parse_add_list)
+
+        settings = vars(parser.parse_args())
+
+        run(files, settings)
 
 
 def main():
