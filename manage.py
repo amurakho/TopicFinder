@@ -5,13 +5,13 @@ import argparse
 
 import const
 import errors
-from parser_runner import get_all_parsers_modules, run
+from parser_runner import get_all_parsers_modules, run_parsers
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 def parse_add_list(string):
-    data = string.split(' ')
+    data = string.split(',')
     return data
 
 
@@ -26,13 +26,13 @@ class Commands:
 
         parser = argparse.ArgumentParser(prog='run', description='"run" command parse')
         parser.add_argument('run')
-        parser.add_argument('-s', action='store_true')
-        parser.add_argument('-o', action='append', choices=files)
-        parser.add_argument('-k', type=parse_add_list)
+        parser.add_argument('-s', action='store_true', help='save to base')
+        parser.add_argument('-o', action='append', choices=files, help='launch only selected parsers')
+        parser.add_argument('-k', nargs='+', help='work with keywords')
 
         settings = vars(parser.parse_args())
 
-        run(files, settings)
+        run_parsers(files, settings)
 
 
 def main():
