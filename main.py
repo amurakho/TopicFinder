@@ -1,8 +1,8 @@
 from const import KEYWORDS
-from parsers.dwParser import DwParsersFactory
-
+# from parsers.dwParser import DwParsersFactory
 from parsers.tproggerParser import TproggerParser
 
+from db import sqlmanager
 """
     Main part - launch all
 
@@ -19,20 +19,4 @@ POLITICS_FABRICS = []
 PROGGER_FABRICS = []
 
 
-if __name__ == '__main__':
-    # parser = TproggerParser(['django'])
-    # data = parser.start_parse()
-    # print(data)
-    # pass
-    from const import POLITICS_KEYWORDS
-    fac = DwParsersFactory()
-    # p = fac.create_top_parser()
-    # data = p.start_parse()
-    # print(len(data))
-    # print(data)
-    p = fac.create_search_parser()
-    for keyword in POLITICS_KEYWORDS:
-        data = p.start_parse(keyword)
-        print(data)
-        break
-
+# if __name__ == '__main__':

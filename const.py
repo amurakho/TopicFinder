@@ -51,7 +51,10 @@ PARSER_FOLDER = 'parsers'
 DB_FOLDER = 'db'
 
 DB_SETTINGS = {
-    'name': config['DB']['name'],
-    'user': config['DB']['user'],
-    'password': config['DB']['password']
+    'drivername': 'postgresql',
+    'database': config['DB']['name'],
+    'username': config['DB']['user'],
+    'password': config['DB']['password'],
+    'host': config['DB']['host'],
+    'port': config['DB']['port'],
 }

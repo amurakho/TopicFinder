@@ -18,7 +18,7 @@ class DwParserTop(AbstractTopParser):
             t = {
                 'url': DW_BASE_URL + block.find('a')['href'],
                 'title': block.find('h2').get_text(),
-                'pub_data': None,
+                'pub_date': None,
                 'text': text_block.get_text() if text_block else None
             }
             data.append(t)

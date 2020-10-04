@@ -4,7 +4,8 @@ Module which search all parsers files and create runner for each parser
 import importlib
 import pathlib
 
-from const import PARSER_FOLDER
+from db.sqlmanager import SqlManager
+from const import PARSER_FOLDER, DB_SETTINGS
 
 
 def get_all_parsers_modules():
@@ -33,10 +34,9 @@ def launch_top_parsers(factory):
 
 
 def save_to_base(data):
-    for elem in data:
-        print(elem)
-        break
-    pass
+    manager = SqlManager(DB_SETTINGS)
+
+    manager.add_to_base(data)
 
 
 def print_stat(data):
@@ -62,11 +62,3 @@ def run_parsers(full_file_list, settings):
             save_to_base(data)
 
         print_stat(data)
-
-
-def main():
-    file_list = get_all_parsers_modules()
-    run_parsers(file_list)
-
-if __name__ == '__main__':
-    main()
