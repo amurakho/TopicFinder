@@ -33,6 +33,9 @@ def launch_top_parsers(factory):
 
 
 def save_to_base(data):
+    for elem in data:
+        print(elem)
+        break
     pass
 
 

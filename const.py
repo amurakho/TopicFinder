@@ -1,4 +1,9 @@
 import pathlib
+import configparser
+
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
 
 PROGRAMMING_SITES = {
     'tproger': 'https://tproger.ru/',
@@ -44,3 +49,9 @@ TEST_FOLDER_PATH = 'tests'
 PARSER_FOLDER = 'parsers'
 
 DB_FOLDER = 'db'
+
+DB_SETTINGS = {
+    'name': config['DB']['name'],
+    'user': config['DB']['user'],
+    'password': config['DB']['password']
+}
