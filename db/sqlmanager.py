@@ -18,6 +18,7 @@ class Link(Base):
     text = Column(String)
     scrapped = Column(Boolean, default=False)
     created_at = Column(Date, default=datetime.datetime.now())
+    is_keyword = Column(Boolean)
 
 
 class SqlManager:
@@ -38,7 +39,8 @@ class SqlManager:
                 url=elem['url'],
                 title=elem['title'],
                 pub_date=elem['pub_date'],
-                text=elem['text']
+                text=elem['text'],
+                is_keyword=elem['is_keyword']
                         )
             self.session.add(link)
 

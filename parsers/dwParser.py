@@ -19,7 +19,8 @@ class DwParserTop(AbstractTopParser):
                 'url': DW_BASE_URL + block.find('a')['href'],
                 'title': block.find('h2').get_text(),
                 'pub_date': None,
-                'text': text_block.get_text() if text_block else None
+                'text': text_block.get_text() if text_block else None,
+                'is_keyword': False
             }
             data.append(t)
 
@@ -80,7 +81,8 @@ class DwParserSearch(AbstractSearchParser):
                 'url': self.base_url + block.find('a')['href'],
                 'title': block.find('h2').get_text(),
                 'text': block.find('p').get_text(),
-                'pub_date': block.find('span', {'class': 'date'}).get_text()
+                'pub_date': block.find('span', {'class': 'date'}).get_text(),
+                'is_keyword': True
             }
             data.append(t)
         return data
