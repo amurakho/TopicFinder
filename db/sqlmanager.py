@@ -13,7 +13,7 @@ class Link(Base):
     __tablename__ = 'main_link'
 
     id = Column(Integer, primary_key=True)
-    url = Column(String)
+    url = Column(String, unique=True)
     title = Column(String)
     pub_date = Column(Date, nullable=True)
     text = Column(String)
