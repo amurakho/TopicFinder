@@ -4,12 +4,13 @@ from sqlalchemy import create_engine, Column, String, Date, Integer, Boolean, Me
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import exists
 
 Base = declarative_base()
 
 
 class Link(Base):
-    __tablename__ = 'main_links'
+    __tablename__ = 'main_link'
 
     id = Column(Integer, primary_key=True)
     url = Column(String)
@@ -35,13 +36,17 @@ class SqlManager:
 
     def add_to_base(self, data):
         for elem in data:
+            is_exist = self.session.query(exists().where(Link.url == elem['url'])).scalar()
+            if is_exist:
+                continue
             link = Link(
                 url=elem['url'],
                 title=elem['title'],
                 pub_date=elem['pub_date'],
                 text=elem['text'],
                 is_keyword=elem['is_keyword']
-                        )
+                )
+
             self.session.add(link)
 
         self.session.commit()
