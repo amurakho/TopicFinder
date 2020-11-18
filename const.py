@@ -21,12 +21,11 @@ POLITICS_SITES = {
     'upravda': 'https://www.pravda.com.ua/',
     'bbc': 'https://www.bbc.com',
     'scmp': 'https://www.scmp.com',
-    'cgtn': 'https://www.cgtn.com/',
 }
 
 PROGRAMMING_KEYWORDS = ['python',  'django', ]
 
-POLITICS_KEYWORDS = ['neo-nazi', 'nazi', 'fash', 'far-right', ]
+POLITICS_KEYWORDS = []
 
 KEYWORDS = {
     'politics': POLITICS_KEYWORDS,
